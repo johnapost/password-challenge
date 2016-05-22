@@ -63,24 +63,37 @@ replaceWords = (password) ->
   current
 
 # Find 'character types' represented in the updated text
-countTypes = (modifiedPass) ->
-  types = 0
+findTypes = (modifiedPass) ->
+  types =
+    alphabet: 0
+    digit: 0
+    whitespace: 0
+    other: 0
+
   if modifiedPass.match /[A-Za-z]/g
-    types += 1
+    types.alphabet = modifiedPass.match(/[A-Za-z]/g).length
   if modifiedPass.match /[0-9]/g
-    types += 1
+    types.digit = modifiedPass.match(/[0-9]/g).length
   if modifiedPass.match /[ \t\n]/g
-    types += 1
+    types.whitespace = modifiedPass.match(/[ \t\n]/g).length
   if modifiedPass.match /[^A-Za-z0-9 \t\n]/g
-    types += 1
+    types.other = modifiedPass.match(/[^A-Za-z0-9 \t\n]/g).length
+
   types
 
 # Finds the strength of the password passed to it
 findStrength = (password) ->
   modifiedPass = replaceWords password
-  numTypes = countTypes modifiedPass
+  types = findTypes modifiedPass
+
+  numTypes = 0
+  for key, val of types
+    numTypes++ if val > 0
+
+  modifiedPass: modifiedPass
+  types: types
 
   # Multiply number of types by the length of the updated text
-  strength = numTypes * modifiedPass.length
+  value: numTypes * modifiedPass.length
 
 module.exports = findStrength
