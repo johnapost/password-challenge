@@ -7,6 +7,10 @@ init = ->
 
   # Retrieve password from the prompt
   prompt.open (password) ->
+    if password.length is 0
+      console.log '\nPlease enter a password'
+      return init()
+
     strength = findStrength password
     category = categorize strength.value
 
