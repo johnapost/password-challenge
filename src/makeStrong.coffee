@@ -45,7 +45,16 @@ transform = (password, index) ->
 
 # Add random characters to a password in order to make it strong
 lengthen = (password) ->
-  password += randomCharacter 'alphabet'
+
+  while findStrength(password).value < 50
+    replaceType = [
+      'alphabet'
+      'digit'
+      'whitespace'
+      'other'
+    ][Math.floor(Math.random() * 4)]
+
+    password += randomCharacter replaceType
 
 makeStrong = (password, types) ->
   newPass = password

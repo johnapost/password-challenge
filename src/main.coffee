@@ -16,8 +16,8 @@ init = ->
         prompt.close()
 
       when category is 'Weak'
-        console.log '\nWhy not try the following:'
-        console.log "#{makeStrong password, strength.types}"
+        newPass = makeStrong password, strength.types
+        console.log "\nWhy not try the following:\n#{newPass}"
         prompt.close()
 
       when category is 'Unacceptable'
