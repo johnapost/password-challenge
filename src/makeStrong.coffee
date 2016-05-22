@@ -17,18 +17,15 @@ randomCharacter = (replaceType) ->
       char = others[Math.floor(Math.random() * others.length)]
 
 # Replaces a string's characters with types that aren't used as often
-transform = (password, index) ->
+transform = (password, index, searchType, replaceType) ->
 
   # Ignore the already processed string
-  ignore = password.slice(0, index - 1)
+  if index is 0
+    ignore = ''
+  else
+    ignore = password.slice(0, index)
+
   modify = password.slice index
-
-  types = findTypes password
-  sorted = Object.keys(types).sort (a, b) -> types[a] - types[b]
-
-  # Get the least
-  searchType = sorted.slice(-1)[0]
-  replaceType = sorted[0]
 
   switch
     when searchType is 'alphabet'
@@ -45,7 +42,6 @@ transform = (password, index) ->
 
 # Add random characters to a password in order to make it strong
 lengthen = (password) ->
-
   while findStrength(password).value < 50
     replaceType = [
       'alphabet'
@@ -55,12 +51,27 @@ lengthen = (password) ->
     ][Math.floor(Math.random() * 4)]
 
     password += randomCharacter replaceType
+  password
 
 makeStrong = (password, types) ->
   newPass = password
 
   for i in [0..password.length - 1]
-    newPass = transform newPass, i
+    types = findTypes newPass
+
+    numTypes = 0
+    for key, val of types
+      numTypes++ if val > 0
+
+    break if numTypes is 4
+
+    sortedTypes = Object.keys(types).sort (a, b) -> types[a] - types[b]
+
+    # Get the least used type
+    searchType = sortedTypes.slice(-1)[0]
+    replaceType = sortedTypes[0]
+
+    newPass = transform newPass, i, searchType, replaceType
 
     # Return the new password immediately if it meets the criteria
     if findStrength(newPass).value >= 50
