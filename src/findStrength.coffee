@@ -1,8 +1,14 @@
 fs = require 'fs'
 dictionary = fs.readFileSync('/usr/share/dict/words').toString().split '\n'
 letters = 'abcdefghijklmnopqrstuvwxyz'.split ''
+foundWords = []
 
-# TODO
+# Returns a random letter
+randomLetter = -> letters[Math.floor(Math.random() * 26)]
+
+# Replace parts of a word simultaneously
+simulReplace = (word, replaceableWords) ->
+
 # Recursively finds the longest words within a word
 findLongest = (inputWord, length) ->
   if length is 1
@@ -32,6 +38,7 @@ findLongest = (inputWord, length) ->
   # A word was successfully found
   if foundWord
     console.log "Word found: #{foundWord}"
+    foundWords.push foundWord
 
     newWords = inputWord.split foundWord
 
@@ -54,14 +61,15 @@ replaceWords = (password) ->
 
   # Change words to letters
   if word[0] in dictionary
-
-    # Change word to random letter
-    letter = letters[Math.floor(Math.random() * 26)]
-    current = current.replace word, letter
+    current = current.replace word, randomLetter()
 
   # Find actual words within this non-word
   else
     findLongest word[0], word[0].length
+
+    # Split current into an array
+    for foundWord in foundWords
+      current = current.replace foundWord, randomLetter()
 
   console.log current
 
