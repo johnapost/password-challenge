@@ -16,11 +16,14 @@ replaceWords = (password) ->
 # Find 'character types' represented in the updated text
 countTypes = (modifiedPass) ->
   types = 0
-  types += modifiedPass.match(/[A-Za-z]+/g).length
-  types += modifiedPass.match(/[0-9]/g).length
-  types += modifiedPass.match(/[ \t\n]/g).length
+  if modifiedPass.match /[A-Za-z]+/g
+    types += 1
+  if modifiedPass.match /[0-9]/g
+    types += 1
+  if modifiedPass.match /[ \t\n]/g
+    types += 1
   if modifiedPass.match /[^A-Za-z0-9 \t\n]/g
-    types += modifiedPass.match(/[^A-Za-z0-9 \t\n]/g).length
+    types += 1
   types
 
 # Finds the strength of the password passed to it
@@ -28,8 +31,8 @@ findStrength = (password) ->
   modifiedPass = replaceWords password
   numTypes = countTypes modifiedPass
 
-  console.log numTypes
-
   # Multiply number of types by the length of the updated text
+  strength = numTypes * modifiedPass.length
+  console.log strength
 
 module.exports = findStrength
