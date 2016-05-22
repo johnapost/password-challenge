@@ -3,49 +3,67 @@ dictionary = fs.readFileSync('/usr/share/dict/words').toString().split '\n'
 letters = 'abcdefghijklmnopqrstuvwxyz'.split ''
 
 # TODO
-# Finds the longest words within a word
-findLongest = (word, length) ->
-  length = 3
+# Recursively finds the longest words within a word
+findLongest = (inputWord, length) ->
+  if length is 1
+    console.log inputWord
+    return
 
   start = 0
   end = length
-
-  wordCandidates = []
+  foundWord = undefined
+  words = []
 
   # Find all the word candidates
-  while end <= word.length
-    wordCandidates.push word.slice start, end
+  while end <= inputWord.length
+    words.push inputWord.slice start, end
     start++
     end++
 
-  # Check for any words in the dictionary
-  words = wordCandidates.map (word) ->
+  # Check for the first real word in the array
+  for word in words
     if word in dictionary
 
       # Change word to random letter
-      letter = letters[Math.floor(Math.random() * 26)]
-      word = word.replace word, letter
+      foundWord = word
+      break
+
+
+  # A word was successfully found
+  if foundWord
+    console.log "Word found: #{foundWord}"
+
+    newWords = inputWord.split foundWord
+
+    # Recursion
+    for newWord in newWords
+      findLongest newWord, length if newWord.length > 0
+
+    return
+
+  # No word was found, look for smaller words
+  else
+    findLongest inputWord, length - 1
 
 # Replace complete English words in password with any lowercase letter
 replaceWords = (password) ->
   current = password
 
   # Check that there are no more possible word candidates
-  while current.match /[A-Za-z]{2,}/
-    word = current.match /[A-Za-z]{2,}/
+  word = current.match /[A-Za-z]{2,}/
 
-    # Change words to letters
-    if word[0] in dictionary
+  # Change words to letters
+  if word[0] in dictionary
 
-      # Change word to random letter
-      letter = letters[Math.floor(Math.random() * 26)]
-      current = current.replace word, letter
+    # Change word to random letter
+    letter = letters[Math.floor(Math.random() * 26)]
+    current = current.replace word, letter
 
-    # Find actual words within this non-word
-    else
-      findLongest word, word.length
+  # Find actual words within this non-word
+  else
+    findLongest word[0], word[0].length
 
-  current
+  console.log current
 
 # Find 'character types' represented in the updated text
 countTypes = (modifiedPass) ->
@@ -68,4 +86,4 @@ findStrength = (password) ->
   # Multiply number of types by the length of the updated text
   strength = numTypes * modifiedPass.length
 
-module.exports = findLongest
+module.exports = replaceWords
