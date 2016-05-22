@@ -5,33 +5,27 @@ letters = 'abcdefghijklmnopqrstuvwxyz'.split ''
 # TODO
 # Finds the longest words within a word
 findLongest = (word, length) ->
-  words = []
+  length = 3
 
-  if word in dictionary
-    words.push word
-  else
-    words
+  start = 0
+  end = length
 
-  words
+  wordCandidates = []
 
-  # length = 3
+  # Find all the word candidates
+  while end <= word.length
+    wordCandidates.push word.slice start, end
+    start++
+    end++
 
-  # start = 0
-  # end = length
+  # Check for any words in the dictionary
+  words = wordCandidates.map (word) ->
+    if word in dictionary
 
-  # wordCandidates = []
+      # Change word to random letter
+      letter = letters[Math.floor(Math.random() * 26)]
+      word = word.replace word, letter
 
-  # # Find all the word candidates
-  # while end <= word.length
-  #   wordCandidates.push word.slice start, end
-  #   start++
-  #   end++
-
-  # wordCandidates
-
-
-
-# TODO
 # Replace complete English words in password with any lowercase letter
 replaceWords = (password) ->
   current = password
@@ -40,13 +34,14 @@ replaceWords = (password) ->
   while current.match /[A-Za-z]{2,}/
     word = current.match /[A-Za-z]{2,}/
 
+    # Change words to letters
     if word[0] in dictionary
-      # Find random letter
-      letter = letters[Math.floor(Math.random() * 26)]
 
       # Change word to random letter
+      letter = letters[Math.floor(Math.random() * 26)]
       current = current.replace word, letter
 
+    # Find actual words within this non-word
     else
       findLongest word, word.length
 
@@ -73,4 +68,4 @@ findStrength = (password) ->
   # Multiply number of types by the length of the updated text
   strength = numTypes * modifiedPass.length
 
-module.exports = replaceWords
+module.exports = findLongest
