@@ -3,13 +3,16 @@ fs = require 'fs'
 # TODO
 # Finds the longest words within a word
 findLongest = (word) ->
-  console.log word
+  dictionary = fs.readFileSync('/usr/share/dict/words').toString().split '\n'
+
+  if word in dictionary
+    console.log "#{word} is a word!"
+  else
+    console.log "#{word} is not a word.."
 
 # TODO
 # Replace complete English words in password with any lowercase letter
 replaceWords = (password) ->
-  return password
-
   wordCandidates = password.match /[A-Za-z]+/g
   findLongest word for word in wordCandidates
 
@@ -33,6 +36,5 @@ findStrength = (password) ->
 
   # Multiply number of types by the length of the updated text
   strength = numTypes * modifiedPass.length
-  console.log strength
 
-module.exports = findStrength
+module.exports = findLongest
