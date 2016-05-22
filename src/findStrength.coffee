@@ -6,9 +6,6 @@ foundWords = []
 # Returns a random letter
 randomLetter = -> letters[Math.floor(Math.random() * 26)]
 
-# Replace parts of a word simultaneously
-simulReplace = (word, replaceableWords) ->
-
 # Recursively finds the longest words within a word
 findLongest = (inputWord, length) ->
   if length is 1
@@ -34,10 +31,8 @@ findLongest = (inputWord, length) ->
       foundWord = word
       break
 
-
   # A word was successfully found
   if foundWord
-    console.log "Word found: #{foundWord}"
     foundWords.push foundWord
 
     newWords = inputWord.split foundWord
@@ -71,7 +66,7 @@ replaceWords = (password) ->
     for foundWord in foundWords
       current = current.replace foundWord, randomLetter()
 
-  console.log current
+  current
 
 # Find 'character types' represented in the updated text
 countTypes = (modifiedPass) ->
@@ -94,4 +89,4 @@ findStrength = (password) ->
   # Multiply number of types by the length of the updated text
   strength = numTypes * modifiedPass.length
 
-module.exports = replaceWords
+module.exports = findStrength
