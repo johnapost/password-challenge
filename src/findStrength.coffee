@@ -8,9 +8,9 @@ randomLetter = -> letters[Math.floor(Math.random() * 26)]
 
 # Recursively finds the longest words within a word
 findLongest = (inputWord, length) ->
-  if length is 1
-    console.log inputWord
-    return
+
+  # No more words to find
+  return if length is 1
 
   start = 0
   end = length
@@ -41,8 +41,6 @@ findLongest = (inputWord, length) ->
     for newWord in newWords
       findLongest newWord, length if newWord.length > 0
 
-    return
-
   # No word was found, look for smaller words
   else
     findLongest inputWord, length - 1
@@ -51,20 +49,16 @@ findLongest = (inputWord, length) ->
 replaceWords = (password) ->
   current = password
 
-  # Check that there are no more possible word candidates
-  word = current.match /[A-Za-z]{2,}/
+  # Assign all words to foundWords array
+  findLongest password, password.length
 
-  # Change words to letters
-  if word[0] in dictionary
-    current = current.replace word, randomLetter()
+  # Replace all found words with letters
+  for foundWord in foundWords
+    current = current.replace foundWord, randomLetter()
 
-  # Find actual words within this non-word
-  else
-    findLongest word[0], word[0].length
-
-    # Split current into an array
-    for foundWord in foundWords
-      current = current.replace foundWord, randomLetter()
+    # NOTE
+    # This may end up creating new words that will then be replaced
+    # This should be refactored so that each word is replaced simultaneously
 
   current
 
@@ -88,5 +82,6 @@ findStrength = (password) ->
 
   # Multiply number of types by the length of the updated text
   strength = numTypes * modifiedPass.length
+  console.log strength
 
 module.exports = findStrength

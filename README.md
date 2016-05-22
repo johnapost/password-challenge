@@ -14,6 +14,7 @@ Usage
 -----
 ```npm start```
 
-Testing
--------
-```npm test```
+Notes
+-----
+* Uses the local dictionary ('/usr/share/dict/words').
+* 's0_0per 5nak3' returns 36, because 'nak' is in the dictionary.
