@@ -82,6 +82,5 @@ findStrength = (password) ->
 
   # Multiply number of types by the length of the updated text
   strength = numTypes * modifiedPass.length
-  console.log strength
 
 module.exports = findStrength
